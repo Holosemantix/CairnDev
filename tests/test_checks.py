@@ -38,6 +38,7 @@ def test_init_project_creates_expected_files(tmp_path: Path) -> None:
         ".cairndev/adr/0001-architecture-contract.md",
         ".cairndev/contract.yaml",
         ".agents/skills/dev-quality-control/SKILL.md",
+        ".agents/skills/dev-quality-review/SKILL.md",
     }
     contract = (tmp_path / ".cairndev" / "contract.yaml").read_text(encoding="utf-8")
     assert f'project_name: "{tmp_path.name}"' in contract

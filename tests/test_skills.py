@@ -17,6 +17,15 @@ def test_repo_and_plugin_control_skills_are_in_sync() -> None:
     assert repo_skill.read_text(encoding="utf-8") == plugin_skill.read_text(encoding="utf-8")
 
 
+def test_repo_and_plugin_review_skills_are_in_sync() -> None:
+    repo_skill = ROOT / ".agents" / "skills" / "dev-quality-review" / "SKILL.md"
+    plugin_skill = (
+        ROOT / "plugins" / "cairndev-quality" / "skills" / "dev-quality-review" / "SKILL.md"
+    )
+
+    assert repo_skill.read_text(encoding="utf-8") == plugin_skill.read_text(encoding="utf-8")
+
+
 def test_control_skill_contains_executable_agent_protocol() -> None:
     skill = (ROOT / ".agents" / "skills" / "dev-quality-control" / "SKILL.md").read_text(
         encoding="utf-8"
@@ -60,3 +69,14 @@ def test_init_project_writes_executable_control_skill(tmp_path: Path) -> None:
     assert "## Required Discovery" in skill
     assert "## Decision Gates" in skill
     assert "Run `cairndev check .` when available." in skill
+
+
+def test_init_project_writes_executable_review_skill(tmp_path: Path) -> None:
+    init_project(tmp_path)
+    skill = (tmp_path / ".agents" / "skills" / "dev-quality-review" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "blocking quality gate" in skill
+    assert "## Blocking Criteria" in skill
+    assert "Lead with findings, ordered by severity" in skill

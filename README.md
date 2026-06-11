@@ -44,6 +44,7 @@ AGENTS.md
 .cairndev/contract.yaml
 .cairndev/adr/0001-architecture-contract.md
 .agents/skills/dev-quality-control/SKILL.md
+.agents/skills/dev-quality-review/SKILL.md
 ```
 
 Existing files are preserved by default. Use `--force` only when you want to
