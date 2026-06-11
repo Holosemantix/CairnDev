@@ -1,5 +1,25 @@
 # Codex Plugin and Skill Spec
 
+## 0. Role split
+
+CairnDev's main contribution is the agent workflow, not a replacement for
+linters or type checkers. Use each layer for a different job:
+
+```text
+AGENTS.md / .cairndev/contract.yaml
+  source of truth for project constraints
+
+Codex skills / plugin
+  agent execution protocol for planning, implementation, and review
+
+cairndev check / hooks / CI
+  deterministic guardrails for hard, measurable drift
+```
+
+Keep `cairndev check` small and deterministic. Put judgment-heavy questions,
+such as whether an abstraction is justified or a module boundary is clean, in
+the skill protocol so the agent must reason from the local project contract.
+
 ## 1. Repo-local skill first
 
 Use repo-local skills before publishing a plugin.

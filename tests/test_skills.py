@@ -1,0 +1,62 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from cairndev.init_project import init_project
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_repo_and_plugin_control_skills_are_in_sync() -> None:
+    repo_skill = ROOT / ".agents" / "skills" / "dev-quality-control" / "SKILL.md"
+    plugin_skill = (
+        ROOT / "plugins" / "cairndev-quality" / "skills" / "dev-quality-control" / "SKILL.md"
+    )
+
+    assert repo_skill.read_text(encoding="utf-8") == plugin_skill.read_text(encoding="utf-8")
+
+
+def test_control_skill_contains_executable_agent_protocol() -> None:
+    skill = (ROOT / ".agents" / "skills" / "dev-quality-control" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    required = [
+        "Do not rely on chat history or memory.",
+        "Identify affected modules, public APIs, data boundaries, I/O boundaries",
+        "Smallest viable change:",
+        "The plan must explicitly state whether the change adds or changes public",
+        "## Decision Gates",
+        "Run `cairndev check .` when available.",
+    ]
+    for text in required:
+        assert text in skill
+
+
+def test_review_skill_defines_blocking_quality_gate() -> None:
+    skill = (
+        ROOT / "plugins" / "cairndev-quality" / "skills" / "dev-quality-review" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+
+    required = [
+        "blocking quality gate",
+        "## Blocking Criteria",
+        "public behavior changed without deterministic tests",
+        "Dependency discipline:",
+        "Lead with findings, ordered by severity",
+    ]
+    for text in required:
+        assert text in skill
+
+
+def test_init_project_writes_executable_control_skill(tmp_path: Path) -> None:
+    init_project(tmp_path)
+    skill = (tmp_path / ".agents" / "skills" / "dev-quality-control" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Do not rely on chat history or memory." in skill
+    assert "## Required Discovery" in skill
+    assert "## Decision Gates" in skill
+    assert "Run `cairndev check .` when available." in skill
