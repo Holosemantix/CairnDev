@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import os
 from pathlib import Path
 
 from .contract import load_contract
@@ -26,12 +27,14 @@ COMMENT_PREFIXES = ("#", "//", "/*", "*", "<!--", "-")
 
 def iter_files(root: Path) -> list[Path]:
     files: list[Path] = []
-    for path in root.rglob("*"):
-        if any(part in IGNORED_DIRS for part in path.parts):
-            continue
-        if path.is_file():
-            files.append(path)
-    return sorted(files)
+    for current, dirnames, filenames in os.walk(root):
+        dirnames[:] = sorted(name for name in dirnames if name not in IGNORED_DIRS)
+        current_path = Path(current)
+        for filename in sorted(filenames):
+            path = current_path / filename
+            if path.is_file():
+                files.append(path)
+    return files
 
 
 def run_checks(root: Path) -> CheckReport:

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from cairndev.checks import run_checks
+from cairndev.checks import iter_files, run_checks
 from cairndev.init_project import init_project
 
 
@@ -11,6 +11,17 @@ def test_sample_project_passes_without_errors() -> None:
     report = run_checks(root)
     assert report.error_count == 0
 
+
+def test_iter_files_prunes_ignored_directories(tmp_path: Path) -> None:
+    kept = tmp_path / "src" / "kept.py"
+    ignored = tmp_path / "node_modules" / "bad.py"
+    kept.parent.mkdir()
+    ignored.parent.mkdir()
+    kept.write_text("x = 1\n", encoding="utf-8")
+    ignored.write_text("this is not valid python", encoding="utf-8")
+
+    files = {path.relative_to(tmp_path).as_posix() for path in iter_files(tmp_path)}
+    assert files == {"src/kept.py"}
 
 def test_missing_contract_warns(tmp_path: Path) -> None:
     (tmp_path / "tests").mkdir()
