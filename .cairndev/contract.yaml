@@ -1,0 +1,48 @@
+schema_version: "0.1"
+project_name: "cairndev-quality-plugin"
+
+principles:
+  low_coupling:
+    description: "Modules should expose narrow APIs and avoid circular dependencies."
+    severity: error
+  high_cohesion:
+    description: "A file/module should have one clear responsibility."
+    severity: warning
+  minimalism:
+    description: "Prefer the smallest correct implementation; avoid speculative layers."
+    severity: warning
+  reliability:
+    description: "Public behavior should be covered by deterministic tests."
+    severity: error
+  extensibility:
+    description: "Extension points should be explicit, documented, and justified by current needs."
+    severity: warning
+  reusability:
+    description: "Shared logic should be factored only after at least two real uses."
+    severity: warning
+  observability:
+    description: "Errors should be explicit and diagnostics should be actionable."
+    severity: warning
+
+budgets:
+  max_python_file_lines: 400
+  max_function_lines: 80
+  max_class_methods: 12
+  max_public_api_per_module: 12
+  max_new_runtime_dependencies_per_change: 1
+  require_tests_for_changed_public_behavior: true
+  require_adr_for_new_abstraction_layer: true
+  disallow_circular_imports: true
+  discourage_global_mutable_state: true
+
+commands:
+  test: "pytest -q"
+  quality_check: "cairndev check ."
+
+review_checklist:
+  - "Does this change reduce or preserve coupling?"
+  - "Can the main behavior be understood from names and types?"
+  - "Is the abstraction justified by current use rather than imagined future use?"
+  - "Are errors explicit and testable?"
+  - "Could this be smaller without losing correctness?"
+  - "Is every public behavior change covered by tests?"

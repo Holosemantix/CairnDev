@@ -1,0 +1,6 @@
+{
+  "name": "cairndev-quality",
+  "version": "0.1.0",
+  "description": "Taste-preserving design-quality workflows for agentic software development.",
+  "skills": "./skills/"
+}

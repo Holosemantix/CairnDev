@@ -1,0 +1,17 @@
+{
+  "name": "repo-local-cairndev",
+  "plugins": [
+    {
+      "name": "cairndev-quality",
+      "source": {
+        "source": "local",
+        "path": "./plugins/cairndev-quality"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

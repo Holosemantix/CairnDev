@@ -1,0 +1,7 @@
+schema_version: "0.1"
+project_name: "sample-project"
+budgets:
+  max_python_file_lines: 120
+  max_function_lines: 40
+  max_class_methods: 8
+  max_public_api_per_module: 8
