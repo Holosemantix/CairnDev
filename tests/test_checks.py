@@ -23,11 +23,62 @@ def test_iter_files_prunes_ignored_directories(tmp_path: Path) -> None:
     files = {path.relative_to(tmp_path).as_posix() for path in iter_files(tmp_path)}
     assert files == {"src/kept.py"}
 
+
 def test_missing_contract_warns(tmp_path: Path) -> None:
     (tmp_path / "tests").mkdir()
     (tmp_path / "AGENTS.md").write_text("# ok\n", encoding="utf-8")
     report = run_checks(tmp_path)
     assert any(item.code == "missing_design_contract" for item in report.findings)
+
+
+def test_missing_agent_skills_warn(tmp_path: Path) -> None:
+    _write_project_contract(tmp_path)
+
+    findings = [
+        item for item in run_checks(tmp_path).findings if item.code == "missing_agent_skill"
+    ]
+
+    assert {item.path for item in findings} == {
+        ".agents/skills/dev-quality-control/SKILL.md",
+        ".agents/skills/dev-quality-review/SKILL.md",
+    }
+
+
+def test_missing_control_agent_skill_warns(tmp_path: Path) -> None:
+    _write_project_contract(tmp_path)
+    _write_agent_skill(tmp_path, "dev-quality-review")
+
+    findings = [
+        item for item in run_checks(tmp_path).findings if item.code == "missing_agent_skill"
+    ]
+
+    assert [item.path for item in findings] == [
+        ".agents/skills/dev-quality-control/SKILL.md"
+    ]
+
+
+def test_missing_review_agent_skill_warns(tmp_path: Path) -> None:
+    _write_project_contract(tmp_path)
+    _write_agent_skill(tmp_path, "dev-quality-control")
+
+    findings = [
+        item for item in run_checks(tmp_path).findings if item.code == "missing_agent_skill"
+    ]
+
+    assert [item.path for item in findings] == [
+        ".agents/skills/dev-quality-review/SKILL.md"
+    ]
+
+
+def test_init_project_satisfies_agent_skill_checks(tmp_path: Path) -> None:
+    init_project(tmp_path)
+    (tmp_path / "tests").mkdir()
+
+    findings = [
+        item for item in run_checks(tmp_path).findings if item.code == "missing_agent_skill"
+    ]
+
+    assert findings == []
 
 
 def test_init_project_creates_expected_files(tmp_path: Path) -> None:
@@ -129,3 +180,9 @@ budgets:{budget_lines or " {}"}
 """,
         encoding="utf-8",
     )
+
+
+def _write_agent_skill(tmp_path: Path, skill_name: str) -> None:
+    path = tmp_path / ".agents" / "skills" / skill_name / "SKILL.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(f"---\nname: {skill_name}\n---\n", encoding="utf-8")

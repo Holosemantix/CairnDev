@@ -23,6 +23,10 @@ IGNORED_DIRS = {
 MUTABLE_NODE_TYPES = (ast.List, ast.Dict, ast.Set)
 FOLLOWUP_MARKERS = ("TO" + "DO", "FIX" + "ME")
 COMMENT_PREFIXES = ("#", "//", "/*", "*", "<!--", "-")
+REQUIRED_AGENT_SKILLS = {
+    "dev-quality-control": "Use cairndev init to add the implementation workflow skill.",
+    "dev-quality-review": "Use cairndev init to add the review workflow skill.",
+}
 
 
 def iter_files(root: Path) -> list[Path]:
@@ -75,6 +79,8 @@ def run_checks(root: Path) -> CheckReport:
             )
         )
 
+    findings.extend(_check_required_agent_skills(root))
+
     for file_path in iter_files(root):
         rel = str(file_path.relative_to(root))
         if file_path.suffix == ".py":
@@ -92,6 +98,25 @@ def run_checks(root: Path) -> CheckReport:
             )
 
     return CheckReport(root=root, findings=findings)
+
+
+def _check_required_agent_skills(root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    for skill_name, suggestion in REQUIRED_AGENT_SKILLS.items():
+        path = root / ".agents" / "skills" / skill_name / "SKILL.md"
+        if path.exists():
+            continue
+        rel = path.relative_to(root).as_posix()
+        findings.append(
+            Finding(
+                code="missing_agent_skill",
+                severity="warning",
+                message=f"Required repo-local agent skill is missing: {skill_name}.",
+                path=rel,
+                suggestion=suggestion,
+            )
+        )
+    return findings
 
 
 def _is_large_dependency_manifest(file_path: Path) -> bool:
