@@ -17,7 +17,7 @@ Favor:
 - deterministic tests and reproducible commands;
 - explicit errors over silent fallback;
 - minimal dependencies;
-- readable names over comments that explain confusing code;
+- concise, self-explanatory variable names over vague abbreviations or comment-dependent code;
 - incremental changes that are easy to review and revert.
 
 Avoid:

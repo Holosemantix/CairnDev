@@ -2,8 +2,8 @@
 name: dev-quality-control
 description: >
   Use before and during implementation when architecture quality, low coupling,
-  extensibility, reusability, reliability, minimal code, design review, or
-  Codex task planning matters.
+  extensibility, reusability, reliability, minimal code, clear variable naming,
+  design review, or Codex task planning matters.
 ---
 
 # Dev Quality Control Skill
@@ -23,7 +23,9 @@ Before editing non-trivial code:
 3. Inspect the local code paths that the task may touch.
 4. Identify affected modules, public APIs, data boundaries, I/O boundaries,
    runtime dependencies, and expected test surface.
-5. If the task changes architecture, extension points, or cross-module
+5. Identify new or changed names at public and data boundaries that must remain
+   self-explanatory.
+6. If the task changes architecture, extension points, or cross-module
    ownership, inspect existing ADRs before deciding.
 
 ## Implementation Plan
@@ -55,6 +57,9 @@ boundary.
 ## Implementation Rules
 
 - Prefer narrow functions, explicit data contracts, and clear module ownership.
+- Use concise, self-explanatory variable names; avoid vague filler such as data,
+  item, tmp, or obj in meaningful logic, and avoid nonstandard abbreviations
+  unless the local domain makes them obvious.
 - Keep I/O, domain logic, presentation, and orchestration separate.
 - Do not introduce broad manager/orchestrator classes.
 - Do not add runtime dependencies without a current, concrete need and explicit
@@ -77,6 +82,8 @@ Stop and revise the plan, or ask the user when needed, if:
 - a new abstraction layer would be added without an ADR when the contract
   requires one;
 - a new dependency is avoidable;
+- new or changed names make the behavior hard to understand from names and
+  types;
 - the requested change conflicts with `AGENTS.md` or `.cairndev/contract.yaml`;
 - verification cannot be run and the residual risk is material.
 
@@ -98,6 +105,7 @@ Summarize:
 - design impact;
 - tests and checks run;
 - CairnDev findings or contract violations;
+- naming issues or why none remain;
 - dependency changes;
 - ADR changes or why none were needed;
 - remaining risks.

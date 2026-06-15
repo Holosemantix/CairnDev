@@ -2,8 +2,8 @@
 name: dev-quality-review
 description: >
   Use after code changes or before a pull request to review architecture,
-  coupling, cohesion, reliability, tests, dependency drift, minimalism, and
-  contract compliance.
+  coupling, cohesion, naming clarity, reliability, tests, dependency drift,
+  minimalism, and contract compliance.
 ---
 
 # Dev Quality Review Skill
@@ -20,7 +20,8 @@ test expectations.
 2. Read `.cairndev/contract.yaml` if present.
 3. Inspect the changed files and relevant surrounding code.
 4. Identify public API changes, new dependencies, new abstractions, data
-   boundary changes, I/O boundary changes, and test coverage.
+   boundary changes, I/O boundary changes, naming clarity for nontrivial
+   variables, and test coverage.
 5. Run the declared test command and `cairndev check .` when available, unless
    the user only asked for a static review.
 
@@ -34,6 +35,8 @@ Request changes when any of these are true:
 - a broad manager/orchestrator object was introduced;
 - a new dependency was added without a concrete current need;
 - an abstraction was added for speculative future use;
+- names are vague enough to obscure public behavior, data contracts, or
+  reviewability;
 - errors became silent, ambiguous, or hard to diagnose;
 - the change violates a contract budget and does not justify the violation;
 - verification failed and the failure is relevant to the change.
@@ -46,6 +49,7 @@ evidence:
 ```text
 Coupling:
 Cohesion:
+Naming clarity:
 Minimalism:
 Reliability:
 Testability:

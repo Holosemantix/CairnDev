@@ -76,3 +76,6 @@ to preserve architecture invariants and review taste across projects and agents.
 
 The CLI is intentionally small. It is a first guardrail, not a replacement for
 linters, tests, security review, or human judgment.
+
+Naming clarity is part of the design contract: variables should be concise and
+self-explanatory, not vague placeholders that need comments to explain intent.

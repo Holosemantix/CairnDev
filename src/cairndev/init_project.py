@@ -6,8 +6,9 @@ DEFAULT_AGENTS = """# AGENTS.md - CairnDev Working Agreement
 
 Before writing code, read `.cairndev/contract.yaml` and preserve the design contract.
 
-Favor low coupling, high cohesion, minimal dependencies, small files, explicit errors,
-deterministic tests, and reversible changes.
+Favor low coupling, high cohesion, concise self-explanatory variable names,
+minimal dependencies, small files, explicit errors, deterministic tests, and
+reversible changes.
 
 After coding, run the test command and `cairndev check .` if available.
 """
@@ -21,6 +22,9 @@ principles:
     severity: error
   high_cohesion:
     description: "A file/module should have one clear responsibility."
+    severity: warning
+  naming:
+    description: "Variable names should be concise, self-explanatory, and free of vague filler."
     severity: warning
   minimalism:
     description: "Prefer the smallest correct implementation; avoid speculative layers."
@@ -55,6 +59,7 @@ commands:
 
 review_checklist:
   - "Does this change preserve low coupling?"
+  - "Are variable names concise and self-explanatory without hiding intent behind vague abbreviations?"
   - "Is the implementation minimal and reversible?"
   - "Are public behavior changes tested?"
 """
@@ -63,8 +68,8 @@ DEFAULT_SKILL = """---
 name: dev-quality-control
 description: >
   Use before and during implementation when architecture quality, low coupling,
-  extensibility, reusability, reliability, minimal code, design review, or
-  Codex task planning matters.
+  extensibility, reusability, reliability, minimal code, clear variable naming,
+  design review, or Codex task planning matters.
 ---
 
 # Dev Quality Control Skill
@@ -84,7 +89,9 @@ Before editing non-trivial code:
 3. Inspect the local code paths that the task may touch.
 4. Identify affected modules, public APIs, data boundaries, I/O boundaries,
    runtime dependencies, and expected test surface.
-5. If the task changes architecture, extension points, or cross-module
+5. Identify new or changed names at public and data boundaries that must remain
+   self-explanatory.
+6. If the task changes architecture, extension points, or cross-module
    ownership, inspect existing ADRs before deciding.
 
 ## Implementation Plan
@@ -116,6 +123,9 @@ boundary.
 ## Implementation Rules
 
 - Prefer narrow functions, explicit data contracts, and clear module ownership.
+- Use concise, self-explanatory variable names; avoid vague filler such as data,
+  item, tmp, or obj in meaningful logic, and avoid nonstandard abbreviations
+  unless the local domain makes them obvious.
 - Keep I/O, domain logic, presentation, and orchestration separate.
 - Do not introduce broad manager/orchestrator classes.
 - Do not add runtime dependencies without a current, concrete need and explicit
@@ -138,6 +148,8 @@ Stop and revise the plan, or ask the user when needed, if:
 - a new abstraction layer would be added without an ADR when the contract
   requires one;
 - a new dependency is avoidable;
+- new or changed names make the behavior hard to understand from names and
+  types;
 - the requested change conflicts with `AGENTS.md` or `.cairndev/contract.yaml`;
 - verification cannot be run and the residual risk is material.
 
@@ -159,6 +171,7 @@ Summarize:
 - design impact;
 - tests and checks run;
 - CairnDev findings or contract violations;
+- naming issues or why none remain;
 - dependency changes;
 - ADR changes or why none were needed;
 - remaining risks.
@@ -168,8 +181,8 @@ DEFAULT_REVIEW_SKILL = """---
 name: dev-quality-review
 description: >
   Use after code changes or before a pull request to review architecture,
-  coupling, cohesion, reliability, tests, dependency drift, minimalism, and
-  contract compliance.
+  coupling, cohesion, naming clarity, reliability, tests, dependency drift,
+  minimalism, and contract compliance.
 ---
 
 # Dev Quality Review Skill
@@ -186,7 +199,8 @@ test expectations.
 2. Read `.cairndev/contract.yaml` if present.
 3. Inspect the changed files and relevant surrounding code.
 4. Identify public API changes, new dependencies, new abstractions, data
-   boundary changes, I/O boundary changes, and test coverage.
+   boundary changes, I/O boundary changes, naming clarity for nontrivial
+   variables, and test coverage.
 5. Run the declared test command and `cairndev check .` when available, unless
    the user only asked for a static review.
 
@@ -200,6 +214,8 @@ Request changes when any of these are true:
 - a broad manager/orchestrator object was introduced;
 - a new dependency was added without a concrete current need;
 - an abstraction was added for speculative future use;
+- names are vague enough to obscure public behavior, data contracts, or
+  reviewability;
 - errors became silent, ambiguous, or hard to diagnose;
 - the change violates a contract budget and does not justify the violation;
 - verification failed and the failure is relevant to the change.
@@ -212,6 +228,7 @@ evidence:
 ```text
 Coupling:
 Cohesion:
+Naming clarity:
 Minimalism:
 Reliability:
 Testability:

@@ -36,7 +36,9 @@ def test_control_skill_contains_executable_agent_protocol() -> None:
         "Identify affected modules, public APIs, data boundaries, I/O boundaries",
         "Smallest viable change:",
         "The plan must explicitly state whether the change adds or changes public",
+        "concise, self-explanatory variable names",
         "## Decision Gates",
+        "new or changed names make the behavior hard to understand",
         "Run `cairndev check .` when available.",
     ]
     for text in required:
@@ -52,6 +54,8 @@ def test_review_skill_defines_blocking_quality_gate() -> None:
         "blocking quality gate",
         "## Blocking Criteria",
         "public behavior changed without deterministic tests",
+        "names are vague enough to obscure public behavior",
+        "Naming clarity:",
         "Dependency discipline:",
         "Lead with findings, ordered by severity",
     ]
@@ -67,6 +71,7 @@ def test_init_project_writes_executable_control_skill(tmp_path: Path) -> None:
 
     assert "Do not rely on chat history or memory." in skill
     assert "## Required Discovery" in skill
+    assert "concise, self-explanatory variable names" in skill
     assert "## Decision Gates" in skill
     assert "Run `cairndev check .` when available." in skill
 
@@ -79,4 +84,5 @@ def test_init_project_writes_executable_review_skill(tmp_path: Path) -> None:
 
     assert "blocking quality gate" in skill
     assert "## Blocking Criteria" in skill
+    assert "Naming clarity:" in skill
     assert "Lead with findings, ordered by severity" in skill

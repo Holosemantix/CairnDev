@@ -80,7 +80,7 @@ hooks: run cairndev check after file edits or before commits
 Use trigger words in the skill description:
 
 ```text
-quality, architecture, low coupling, extensible, reusable, reliable, minimal code, design review, PR review, Codex task planning
+quality, architecture, low coupling, extensible, reusable, reliable, minimal code, clear variable naming, self-explanatory names, design review, PR review, Codex task planning
 ```
 
 ## 6. Boundaries

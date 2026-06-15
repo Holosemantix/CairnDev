@@ -8,6 +8,9 @@ principles:
   high_cohesion:
     description: "A file/module should have one clear responsibility."
     severity: warning
+  naming:
+    description: "Variable names should be concise, self-explanatory, and free of vague filler."
+    severity: warning
   minimalism:
     description: "Prefer the smallest correct implementation; avoid speculative layers."
     severity: warning
@@ -41,7 +44,8 @@ commands:
 
 review_checklist:
   - "Does this change reduce or preserve coupling?"
-  - "Can the main behavior be understood from names and types?"
+  - "Can the main behavior be understood from concise, self-explanatory names and types?"
+  - "Are variable names concise and self-explanatory without hiding intent behind vague abbreviations?"
   - "Is the abstraction justified by current use rather than imagined future use?"
   - "Are errors explicit and testable?"
   - "Could this be smaller without losing correctness?"

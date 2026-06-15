@@ -2,7 +2,7 @@
 
 ## Objective
 
-Build a reusable quality-control plugin for agentic software development. The plugin should help Codex and other AI coding tools preserve high-quality architecture across projects: low coupling, high cohesion, extensibility, reusability, reliability, minimalism, testability, and small readable code.
+Build a reusable quality-control plugin for agentic software development. The plugin should help Codex and other AI coding tools preserve high-quality architecture across projects: low coupling, high cohesion, extensibility, reusability, reliability, minimalism, testability, concise self-explanatory variable naming, and small readable code.
 
 ## Important non-goals
 
