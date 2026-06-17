@@ -16,6 +16,7 @@ Favor:
 - typed data contracts at boundaries;
 - deterministic tests and reproducible commands;
 - explicit errors over silent fallback;
+- platform-adaptive user-facing interfaces across CLI, Windows, macOS, iOS, and Android;
 - minimal dependencies;
 - concise, self-explanatory variable names over vague abbreviations or comment-dependent code;
 - incremental changes that are easy to review and revert.
@@ -30,6 +31,7 @@ Avoid:
 - mixing I/O, business logic, and presentation in one module;
 - creating large files when a small module will do;
 - changing public behavior without tests or docs.
+- binding business/domain logic directly to one UI toolkit, OS, shell, or device form factor.
 
 ## Required workflow
 
@@ -47,4 +49,3 @@ For every non-trivial task:
 ## When uncertain
 
 Prefer a smaller reversible implementation and leave an explicit TODO in an ADR or task note, not in production code.
-

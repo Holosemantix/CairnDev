@@ -41,6 +41,23 @@ principles:
   observability:
     description: "Errors should be explicit and diagnostics should be actionable."
     severity: warning
+  cross_platform_adaptivity:
+    description: "User-facing interfaces should be designed for CLI, Windows, macOS, iOS, and Android adaptation without coupling business logic to a single platform."
+    severity: warning
+
+platform_targets:
+  cli: true
+  desktop:
+    - Windows
+    - macOS
+  mobile:
+    - iOS
+    - Android
+  expectations:
+    - "Keep core domain logic independent from UI, OS, shell, filesystem path, and device assumptions."
+    - "Expose reusable service/API contracts that can support CLI, desktop, and mobile clients."
+    - "Use responsive layouts and adaptive interaction patterns for user-facing screens."
+    - "Avoid platform-specific behavior unless isolated behind a narrow adapter."
 
 budgets:
   max_python_file_lines: 400
@@ -62,6 +79,7 @@ review_checklist:
   - "Are variable names concise and self-explanatory without hiding intent behind vague abbreviations?"
   - "Is the implementation minimal and reversible?"
   - "Are public behavior changes tested?"
+  - "Does user-facing behavior remain adaptable across CLI, Windows, macOS, iOS, and Android?"
 """
 
 DEFAULT_SKILL = """---

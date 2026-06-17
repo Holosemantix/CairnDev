@@ -94,6 +94,9 @@ def test_init_project_creates_expected_files(tmp_path: Path) -> None:
     contract = (tmp_path / ".cairndev" / "contract.yaml").read_text(encoding="utf-8")
     assert f'project_name: "{tmp_path.name}"' in contract
     assert "naming:" in contract
+    assert "platform_targets:" in contract
+    assert "Windows" in contract
+    assert "Android" in contract
     assert "Are variable names concise and self-explanatory" in contract
 
 
