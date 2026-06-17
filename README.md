@@ -22,6 +22,7 @@ StockStudio is a live example of CairnDev guiding a larger product from final
 specification to a tested scaffold and phased architecture:
 
 - [StockStudio case study](docs/08_STOCKSTUDIO_CASE_STUDY.md)
+- [Language standards baseline](docs/09_LANGUAGE_STANDARDS.md)
 
 ## Install Locally
 

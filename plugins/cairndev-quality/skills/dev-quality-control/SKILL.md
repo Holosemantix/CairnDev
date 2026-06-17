@@ -57,6 +57,8 @@ boundary.
 ## Implementation Rules
 
 - Prefer narrow functions, explicit data contracts, and clear module ownership.
+- Follow the target language's official or widely adopted style guide and
+  configured formatter, linter, and type checker before local style preference.
 - Use concise, self-explanatory variable names; avoid vague filler such as data,
   item, tmp, or obj in meaningful logic, and avoid nonstandard abbreviations
   unless the local domain makes them obvious.
@@ -92,10 +94,11 @@ Stop and revise the plan, or ask the user when needed, if:
 After editing:
 
 1. Run the project's declared test command when available.
-2. Run `cairndev check .` when available.
-3. If the `cairndev` executable is not installed, use the documented local
+2. Run configured language formatters, linters, and type checkers when available.
+3. Run `cairndev check .` when available.
+4. If the `cairndev` executable is not installed, use the documented local
    module entry point when this repository provides one.
-4. Fix failures or report a concrete reason they remain.
+5. Fix failures or report a concrete reason they remain.
 
 ## Final Report
 
@@ -106,6 +109,7 @@ Summarize:
 - tests and checks run;
 - CairnDev findings or contract violations;
 - naming issues or why none remain;
+- language standard checks run or why none were configured;
 - dependency changes;
 - ADR changes or why none were needed;
 - remaining risks.

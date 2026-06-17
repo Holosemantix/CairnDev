@@ -21,7 +21,7 @@ test expectations.
 3. Inspect the changed files and relevant surrounding code.
 4. Identify public API changes, new dependencies, new abstractions, data
    boundary changes, I/O boundary changes, naming clarity for nontrivial
-   variables, and test coverage.
+   variables, language standard expectations, and test coverage.
 5. Run the declared test command and `cairndev check .` when available, unless
    the user only asked for a static review.
 
@@ -37,6 +37,8 @@ Request changes when any of these are true:
 - an abstraction was added for speculative future use;
 - names are vague enough to obscure public behavior, data contracts, or
   reviewability;
+- production code ignores the target language's canonical style or configured
+  formatter/linter/type checker without a documented project reason;
 - errors became silent, ambiguous, or hard to diagnose;
 - the change violates a contract budget and does not justify the violation;
 - verification failed and the failure is relevant to the change.
@@ -56,6 +58,7 @@ Testability:
 Extensibility:
 Dependency discipline:
 Observability:
+Language standards:
 ```
 
 ## Output Format

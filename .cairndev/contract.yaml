@@ -26,6 +26,9 @@ principles:
   observability:
     description: "Errors should be explicit and diagnostics should be actionable."
     severity: warning
+  language_native_standards:
+    description: "Use the target language ecosystem's official or widely adopted style guides, formatters, linters, and type checkers before adding local style rules."
+    severity: warning
   cross_platform_adaptivity:
     description: "User-facing interfaces should be designed for CLI, Windows, macOS, iOS, and Android adaptation without coupling business logic to a single platform."
     severity: warning
@@ -67,4 +70,5 @@ review_checklist:
   - "Are errors explicit and testable?"
   - "Could this be smaller without losing correctness?"
   - "Is every public behavior change covered by tests?"
+  - "Does the change follow the target language's canonical style guide and configured formatter/linter/type checker?"
   - "Does user-facing behavior remain adaptable across CLI, Windows, macOS, iOS, and Android?"

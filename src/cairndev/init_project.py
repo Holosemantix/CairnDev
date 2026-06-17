@@ -7,10 +7,11 @@ DEFAULT_AGENTS = """# AGENTS.md - CairnDev Working Agreement
 Before writing code, read `.cairndev/contract.yaml` and preserve the design contract.
 
 Favor low coupling, high cohesion, concise self-explanatory variable names,
-minimal dependencies, small files, explicit errors, deterministic tests, and
-reversible changes.
+language-native style and tooling standards, minimal dependencies, small files,
+explicit errors, deterministic tests, and reversible changes.
 
-After coding, run the test command and `cairndev check .` if available.
+After coding, run the configured formatter/linter/type checker, the test
+command, and `cairndev check .` if available.
 """
 
 DEFAULT_CONTRACT_TEMPLATE = """schema_version: "0.1"
@@ -40,6 +41,9 @@ principles:
     severity: warning
   observability:
     description: "Errors should be explicit and diagnostics should be actionable."
+    severity: warning
+  language_native_standards:
+    description: "Use the target language ecosystem's official or widely adopted style guides, formatters, linters, and type checkers before adding local style rules."
     severity: warning
   cross_platform_adaptivity:
     description: "User-facing interfaces should be designed for CLI, Windows, macOS, iOS, and Android adaptation without coupling business logic to a single platform."
@@ -79,6 +83,7 @@ review_checklist:
   - "Are variable names concise and self-explanatory without hiding intent behind vague abbreviations?"
   - "Is the implementation minimal and reversible?"
   - "Are public behavior changes tested?"
+  - "Does the change follow the target language's canonical style guide and configured formatter/linter/type checker?"
   - "Does user-facing behavior remain adaptable across CLI, Windows, macOS, iOS, and Android?"
 """
 
@@ -141,6 +146,8 @@ boundary.
 ## Implementation Rules
 
 - Prefer narrow functions, explicit data contracts, and clear module ownership.
+- Follow the target language's official or widely adopted style guide and
+  configured formatter, linter, and type checker before local style preference.
 - Use concise, self-explanatory variable names; avoid vague filler such as data,
   item, tmp, or obj in meaningful logic, and avoid nonstandard abbreviations
   unless the local domain makes them obvious.
@@ -190,6 +197,7 @@ Summarize:
 - tests and checks run;
 - CairnDev findings or contract violations;
 - naming issues or why none remain;
+- language standard checks run or why none were configured;
 - dependency changes;
 - ADR changes or why none were needed;
 - remaining risks.
@@ -218,7 +226,7 @@ test expectations.
 3. Inspect the changed files and relevant surrounding code.
 4. Identify public API changes, new dependencies, new abstractions, data
    boundary changes, I/O boundary changes, naming clarity for nontrivial
-   variables, and test coverage.
+   variables, language standard expectations, and test coverage.
 5. Run the declared test command and `cairndev check .` when available, unless
    the user only asked for a static review.
 
@@ -234,6 +242,8 @@ Request changes when any of these are true:
 - an abstraction was added for speculative future use;
 - names are vague enough to obscure public behavior, data contracts, or
   reviewability;
+- production code ignores the target language's canonical style or configured
+  formatter/linter/type checker without a documented project reason;
 - errors became silent, ambiguous, or hard to diagnose;
 - the change violates a contract budget and does not justify the violation;
 - verification failed and the failure is relevant to the change.
@@ -253,6 +263,7 @@ Testability:
 Extensibility:
 Dependency discipline:
 Observability:
+Language standards:
 ```
 
 ## Output Format
