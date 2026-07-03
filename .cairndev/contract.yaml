@@ -58,6 +58,15 @@ budgets:
   disallow_circular_imports: true
   discourage_global_mutable_state: true
 
+agentic_iteration:
+  enabled: true
+  require_goal_file: true
+  goal_file: ".cairndev/goal.yaml"
+  max_iterations_without_human_review: 6
+  require_verification_each_iteration: true
+  min_success_criteria: 1
+  min_pause_triggers: 1
+
 commands:
   test: "pytest -q"
   quality_check: "cairndev check ."

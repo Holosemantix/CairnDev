@@ -11,6 +11,7 @@ machine-checkable:
 
 - persistent project instructions in `AGENTS.md`;
 - a machine-readable design contract in `.cairndev/contract.yaml`;
+- durable multi-round goal state in `.cairndev/goal.yaml`;
 - repo-local Codex skills under `.agents/skills/`;
 - an optional Codex plugin scaffold under `plugins/cairndev-quality/`;
 - deterministic local checks through the `cairndev` CLI;
@@ -50,6 +51,7 @@ This creates the repo-local contract bundle:
 ```text
 AGENTS.md
 .cairndev/contract.yaml
+.cairndev/goal.yaml
 .cairndev/adr/0001-architecture-contract.md
 .agents/skills/dev-quality-control/SKILL.md
 .agents/skills/dev-quality-review/SKILL.md
@@ -87,3 +89,8 @@ linters, tests, security review, or human judgment.
 
 Naming clarity is part of the design contract: variables should be concise and
 self-explanatory, not vague placeholders that need comments to explain intent.
+
+For long-running automated work, CairnDev keeps the durable objective,
+success criteria, verification iteration, and human pause triggers in
+`.cairndev/goal.yaml`. See
+[Continuous Agent Governance](docs/10_CONTINUOUS_AGENT_GOVERNANCE.md).

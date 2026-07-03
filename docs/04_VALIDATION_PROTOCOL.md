@@ -28,6 +28,8 @@ Record:
 - whether the implementation was smaller
 - whether Codex followed architecture boundaries
 - whether you had to restate your preferences manually
+- whether Codex preserved the durable goal across multiple turns
+- whether `.cairndev/goal.yaml` made context reset recovery accurate
 ```
 
 ## 3. Minimal metrics
@@ -47,6 +49,10 @@ human_review_effort:
   description: "Subjective review effort 1-5."
 accepted_without_major_rewrite:
   description: "Whether the result could be accepted after small fixes."
+goal_drift_count:
+  description: "Times the agent's implementation deviated from the durable objective."
+unverified_iteration_count:
+  description: "Iterations where work continued without passing required checks."
 ```
 
 ## 4. Go criteria
@@ -57,6 +63,7 @@ Continue building if:
 - it reduces repeated prompt text in all 3 projects;
 - it catches at least one meaningful design violation per project;
 - it makes Codex plans more explicit and constrained;
+- it preserves long-running objectives without repeated manual reminders;
 - it does not create heavy process overhead;
 - you would actually keep copying it into new projects.
 ```
@@ -70,6 +77,6 @@ Stop or shrink the project if:
 - checks are noisy and ignored;
 - it slows down development without improving review quality;
 - existing linters/templates already cover the useful parts;
+- the goal state becomes stale paperwork rather than an enforced check;
 - you do not use it voluntarily after the first three projects.
 ```
-

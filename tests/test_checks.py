@@ -88,6 +88,7 @@ def test_init_project_creates_expected_files(tmp_path: Path) -> None:
         "AGENTS.md",
         ".cairndev/adr/0001-architecture-contract.md",
         ".cairndev/contract.yaml",
+        ".cairndev/goal.yaml",
         ".agents/skills/dev-quality-control/SKILL.md",
         ".agents/skills/dev-quality-review/SKILL.md",
     }
@@ -97,7 +98,11 @@ def test_init_project_creates_expected_files(tmp_path: Path) -> None:
     assert "platform_targets:" in contract
     assert "Windows" in contract
     assert "Android" in contract
+    assert "agentic_iteration:" in contract
     assert "Are variable names concise and self-explanatory" in contract
+    goal = (tmp_path / ".cairndev" / "goal.yaml").read_text(encoding="utf-8")
+    assert "success_criteria:" in goal
+    assert "pause_triggers:" in goal
 
 
 def test_init_project_is_idempotent_without_force(tmp_path: Path) -> None:

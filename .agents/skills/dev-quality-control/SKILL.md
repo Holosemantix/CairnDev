@@ -13,6 +13,8 @@ description: >
 Make the repository's design contract executable during implementation.
 Do not rely on chat history or memory. Treat `AGENTS.md` and
 `.cairndev/contract.yaml` as the source of truth for the current project.
+When agentic iteration is enabled, treat `.cairndev/goal.yaml` as the durable
+goal state across turns and context resets.
 
 ## Required Discovery
 
@@ -20,12 +22,13 @@ Before editing non-trivial code:
 
 1. Read `AGENTS.md`.
 2. Read `.cairndev/contract.yaml` if present.
-3. Inspect the local code paths that the task may touch.
-4. Identify affected modules, public APIs, data boundaries, I/O boundaries,
+3. Read `.cairndev/goal.yaml` when agentic iteration is enabled.
+4. Inspect the local code paths that the task may touch.
+5. Identify affected modules, public APIs, data boundaries, I/O boundaries,
    runtime dependencies, and expected test surface.
-5. Identify new or changed names at public and data boundaries that must remain
+6. Identify new or changed names at public and data boundaries that must remain
    self-explanatory.
-6. If the task changes architecture, extension points, or cross-module
+7. If the task changes architecture, extension points, or cross-module
    ownership, inspect existing ADRs before deciding.
 
 ## Implementation Plan
@@ -99,6 +102,8 @@ After editing:
 4. If the `cairndev` executable is not installed, use the documented local
    module entry point when this repository provides one.
 5. Fix failures or report a concrete reason they remain.
+6. For multi-round work, update `.cairndev/goal.yaml` after verification so the
+   next iteration can recover the objective, current iteration, and pause state.
 
 ## Final Report
 

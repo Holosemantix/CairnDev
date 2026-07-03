@@ -7,6 +7,7 @@ repo/
   AGENTS.md                         # persistent agent guidance
   .cairndev/
     contract.yaml                    # machine-readable design contract
+    goal.yaml                        # durable long-running objective state
     adr/                             # design decisions
     reports/                         # generated quality reports
   .agents/
@@ -36,7 +37,24 @@ Purpose:
 - make project taste version-controlled.
 ```
 
-### 2.2 Agent instructions
+### 2.2 Goal state
+
+File:
+
+```text
+.cairndev/goal.yaml
+```
+
+Purpose:
+
+```text
+- declare the durable objective for multi-round work;
+- track current, verified, and human-reviewed iterations;
+- define success criteria and human pause triggers;
+- make long-running agent work recoverable after context resets.
+```
+
+### 2.3 Agent instructions
 
 File:
 
@@ -52,7 +70,7 @@ Purpose:
 - define default workflow before and after coding.
 ```
 
-### 2.3 Skill
+### 2.4 Skill
 
 File:
 
@@ -68,7 +86,7 @@ Purpose:
 - avoid stuffing too much text into AGENTS.md.
 ```
 
-### 2.4 CLI
+### 2.5 CLI
 
 Command:
 
@@ -87,7 +105,7 @@ Purpose:
 - remain independent of any LLM provider.
 ```
 
-### 2.5 Plugin scaffold
+### 2.6 Plugin scaffold
 
 Directory:
 
@@ -114,6 +132,8 @@ Codex activates dev-quality-control skill
   ↓
 Codex reads .cairndev/contract.yaml
   ↓
+Codex reads .cairndev/goal.yaml when agentic iteration is enabled
+  ↓
 Codex writes plan constrained by design contract
   ↓
 Codex implements smallest change
@@ -136,6 +156,7 @@ MVP checks:
 - missing tests directory
 - missing design contract
 - missing AGENTS.md
+- missing or stale agentic goal state when enabled
 - dependency count drift placeholder
 ```
 
@@ -155,4 +176,3 @@ Later checks:
 ## 5. Design philosophy
 
 The CLI should be intentionally conservative. It should not attempt to solve subjective design completely. Its job is to catch obvious drift and to force explicit justification when a change exceeds the project’s declared taste budget.
-

@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 Severity = Literal["info", "warning", "error"]
+GoalStatus = Literal["active", "paused", "blocked", "complete"]
 
 
 @dataclass(frozen=True)
@@ -31,10 +32,36 @@ class QualityBudget:
 
 
 @dataclass
+class AgenticIterationPolicy:
+    enabled: bool = False
+    require_goal_file: bool = False
+    goal_file: str = ".cairndev/goal.yaml"
+    max_iterations_without_human_review: int = 6
+    require_verification_each_iteration: bool = True
+    min_success_criteria: int = 1
+    min_pause_triggers: int = 1
+
+
+@dataclass
+class GoalState:
+    schema_version: str = "0.1"
+    objective: str = ""
+    status: GoalStatus | str = "active"
+    current_iteration: int = 0
+    last_verified_iteration: int = 0
+    last_human_review_iteration: int = 0
+    success_criteria: list[str] = field(default_factory=list)
+    pause_triggers: list[str] = field(default_factory=list)
+
+
+@dataclass
 class DesignContract:
     schema_version: str = "0.1"
     project_name: str = "unknown"
     budgets: QualityBudget = field(default_factory=QualityBudget)
+    agentic_iteration: AgenticIterationPolicy = field(
+        default_factory=AgenticIterationPolicy
+    )
     principles: dict[str, Any] = field(default_factory=dict)
     commands: dict[str, str] = field(default_factory=dict)
     review_checklist: list[str] = field(default_factory=list)

@@ -27,7 +27,21 @@ TODO/FIXME markers
 obvious global mutable state
 ```
 
-## Step 4: Reports
+## Step 4: Add continuous-agent state checks
+
+Represent multi-round work with `.cairndev/goal.yaml` and validate it when
+`agentic_iteration.enabled` is true:
+
+```text
+missing goal state
+empty durable objective
+missing success criteria
+missing human pause triggers
+unverified current iteration
+human review interval exceeded
+```
+
+## Step 5: Reports
 
 Output both text and JSON:
 
@@ -36,7 +50,7 @@ cairndev check .
 cairndev check . --json
 ```
 
-## Step 5: Init command
+## Step 6: Init command
 
 Generate repo-local artifacts:
 
@@ -44,7 +58,7 @@ Generate repo-local artifacts:
 cairndev init --target .
 ```
 
-## Step 6: Tests
+## Step 7: Tests
 
 Add tests for:
 
@@ -55,9 +69,10 @@ function length detection
 missing required files
 CLI JSON output
 init command idempotency
+agentic iteration state validation
 ```
 
-## Step 7: Plugin packaging
+## Step 8: Plugin packaging
 
 Verify plugin scaffold:
 
@@ -67,4 +82,3 @@ plugins/cairndev-quality/skills/dev-quality-control/SKILL.md
 plugins/cairndev-quality/skills/dev-quality-review/SKILL.md
 .agents/plugins/marketplace.json
 ```
-

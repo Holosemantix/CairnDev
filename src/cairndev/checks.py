@@ -4,6 +4,7 @@ import ast
 import os
 from pathlib import Path
 
+from .agentic_iteration import check_agentic_iteration_state
 from .contract import load_contract
 from .models import CheckReport, Finding, QualityBudget
 
@@ -79,6 +80,7 @@ def run_checks(root: Path) -> CheckReport:
             )
         )
 
+    findings.extend(check_agentic_iteration_state(root, contract.agentic_iteration))
     findings.extend(_check_required_agent_skills(root))
 
     for file_path in iter_files(root):

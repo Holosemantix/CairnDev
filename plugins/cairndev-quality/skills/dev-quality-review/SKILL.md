@@ -18,11 +18,12 @@ test expectations.
 
 1. Read `AGENTS.md`.
 2. Read `.cairndev/contract.yaml` if present.
-3. Inspect the changed files and relevant surrounding code.
-4. Identify public API changes, new dependencies, new abstractions, data
+3. Read `.cairndev/goal.yaml` when agentic iteration is enabled.
+4. Inspect the changed files and relevant surrounding code.
+5. Identify public API changes, new dependencies, new abstractions, data
    boundary changes, I/O boundary changes, naming clarity for nontrivial
    variables, language standard expectations, and test coverage.
-5. Run the declared test command and `cairndev check .` when available, unless
+6. Run the declared test command and `cairndev check .` when available, unless
    the user only asked for a static review.
 
 ## Blocking Criteria
@@ -42,6 +43,8 @@ Request changes when any of these are true:
 - errors became silent, ambiguous, or hard to diagnose;
 - the change violates a contract budget and does not justify the violation;
 - verification failed and the failure is relevant to the change.
+- agentic iteration is enabled and the goal state is missing, stale,
+  unverified, or beyond its human-review interval.
 
 ## Review Rubric
 

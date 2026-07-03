@@ -1,0 +1,21 @@
+schema_version: "0.1"
+objective: "Keep CairnDev a lightweight, executable design-contract layer for agentic software development."
+status: active
+current_iteration: 1
+last_verified_iteration: 1
+last_human_review_iteration: 1
+
+success_criteria:
+  - "CairnDev preserves durable project goals, design contracts, verification state, and human pause triggers across multi-round agentic work."
+  - "The CLI remains deterministic, lightweight, provider-agnostic, and covered by tests."
+
+pause_triggers:
+  - "Changing the public contract schema in a backwards-incompatible way."
+  - "Adding runtime dependencies or agent orchestration features beyond quality-control state checks."
+  - "Required verification cannot run or fails for reasons the agent cannot safely fix."
+
+verification:
+  required_commands:
+    - "python3 -m compileall -q src tests"
+    - "python3 -m pytest -q"
+    - "PYTHONPATH=src python3 -m cairndev.cli check ."
