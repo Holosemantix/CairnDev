@@ -41,7 +41,8 @@ def test_control_skill_contains_executable_agent_protocol() -> None:
         "## Decision Gates",
         "new or changed names make the behavior hard to understand",
         "Run `cairndev check .` when available.",
-        "current iteration, and pause state",
+        "current iteration, pause state, and latest verified decision",
+        ".cairndev/loop.md",
     ]
     for text in required:
         assert text in skill
@@ -62,6 +63,7 @@ def test_review_skill_defines_blocking_quality_gate() -> None:
         "Dependency discipline:",
         "Lead with findings, ordered by severity",
         "beyond its human-review interval",
+        "trajectory, checkpoints, or required",
     ]
     for text in required:
         assert text in skill
@@ -79,7 +81,8 @@ def test_init_project_writes_executable_control_skill(tmp_path: Path) -> None:
     assert "concise, self-explanatory variable names" in skill
     assert "## Decision Gates" in skill
     assert "Run `cairndev check .` when available." in skill
-    assert "current iteration, and pause state" in skill
+    assert "current iteration, pause state, and latest verified decision" in skill
+    assert ".cairndev/loop.md" in skill
 
 
 def test_init_project_writes_executable_review_skill(tmp_path: Path) -> None:
@@ -90,6 +93,7 @@ def test_init_project_writes_executable_review_skill(tmp_path: Path) -> None:
 
     assert "blocking quality gate" in skill
     assert ".cairndev/goal.yaml" in skill
+    assert "configured loop trajectory" in skill
     assert "## Blocking Criteria" in skill
     assert "Naming clarity:" in skill
     assert "Lead with findings, ordered by severity" in skill

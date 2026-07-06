@@ -43,6 +43,13 @@ class AgenticIterationPolicy:
 
 
 @dataclass
+class LoopEngineeringState:
+    trajectory_file: str | None = None
+    checkpoint_files: list[str] = field(default_factory=list)
+    required_skills: list[str] = field(default_factory=list)
+
+
+@dataclass
 class GoalState:
     schema_version: str = "0.1"
     objective: str = ""
@@ -52,6 +59,8 @@ class GoalState:
     last_human_review_iteration: int = 0
     success_criteria: list[str] = field(default_factory=list)
     pause_triggers: list[str] = field(default_factory=list)
+    verification_required_commands: list[str] = field(default_factory=list)
+    loop_engineering: LoopEngineeringState = field(default_factory=LoopEngineeringState)
 
 
 @dataclass

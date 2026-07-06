@@ -6,7 +6,7 @@ Use this file as persistent guidance for Codex and other coding agents.
 
 Before writing code, preserve the design contract. After writing code, verify the design contract.
 For multi-round work, preserve the durable goal state in `.cairndev/goal.yaml`
-as well as the design contract.
+and the loop trajectory in `.cairndev/loop.md` as well as the design contract.
 
 ## Engineering taste
 
@@ -43,15 +43,16 @@ For every non-trivial task:
 
 1. Read `.cairndev/contract.yaml` if present.
 2. Read `.cairndev/goal.yaml` when agentic iteration is enabled.
-3. Identify affected modules and boundaries.
-4. Produce a concise implementation plan.
-5. Name the smallest viable change.
-6. Implement with tests.
-7. Run the project’s test/lint commands.
-8. Run `cairndev check .` if available.
-9. Run configured language formatters/linters/type checkers when available.
-10. Update `.cairndev/goal.yaml` after verified multi-round work.
-11. Summarize design impact and any contract violations.
+3. Read `.cairndev/loop.md` when a loop trajectory is configured.
+4. Identify affected modules and boundaries.
+5. Produce a concise implementation plan.
+6. Name the smallest viable change.
+7. Implement with tests.
+8. Run the project’s test/lint commands.
+9. Run `cairndev check .` if available.
+10. Run configured language formatters/linters/type checkers when available.
+11. Update `.cairndev/goal.yaml` and `.cairndev/loop.md` after verified multi-round work.
+12. Summarize design impact and any contract violations.
 
 ## When uncertain
 

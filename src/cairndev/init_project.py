@@ -6,7 +6,8 @@ DEFAULT_AGENTS = """# AGENTS.md - CairnDev Working Agreement
 
 Before writing code, read `.cairndev/contract.yaml` and preserve the design contract.
 For multi-round work, read `.cairndev/goal.yaml` and keep the durable objective,
-success criteria, verification state, and human pause triggers current.
+success criteria, verification state, human pause triggers, and configured loop
+trajectory current.
 
 Favor low coupling, high cohesion, concise self-explanatory variable names,
 language-native style and tooling standards, minimal dependencies, small files,
@@ -15,7 +16,6 @@ explicit errors, deterministic tests, and reversible changes.
 After coding, run the configured formatter/linter/type checker, the test
 command, and `cairndev check .` if available.
 """
-
 DEFAULT_CONTRACT_TEMPLATE = """schema_version: "0.1"
 project_name: "{project_name}"
 
@@ -97,7 +97,6 @@ review_checklist:
   - "Does the change follow the target language's canonical style guide and configured formatter/linter/type checker?"
   - "Does user-facing behavior remain adaptable across CLI, Windows, macOS, iOS, and Android?"
 """
-
 DEFAULT_GOAL_TEMPLATE = """schema_version: "0.1"
 objective: "Preserve the project goal and design contract across multi-round agentic development."
 status: active
@@ -117,8 +116,20 @@ verification:
   required_commands:
     - "Run the configured test/lint/type-check commands for the project."
     - "Run cairndev check ."
-"""
 
+loop_engineering:
+  trajectory_file: ".cairndev/loop.md"
+  checkpoint_files:
+    - ".cairndev/goal.yaml"
+  required_skills:
+    - "dev-quality-control"
+    - "dev-quality-review"
+"""
+DEFAULT_LOOP_LOG = (
+    "# CairnDev Loop Trajectory\n\n"
+    "Record iteration number, smallest change, verification result, design impact, "
+    "contract risk, and human review decision when one happens.\n"
+)
 DEFAULT_SKILL = """---
 name: dev-quality-control
 description: >
@@ -135,7 +146,9 @@ Make the repository's design contract executable during implementation.
 Do not rely on chat history or memory. Treat `AGENTS.md` and
 `.cairndev/contract.yaml` as the source of truth for the current project.
 When agentic iteration is enabled, treat `.cairndev/goal.yaml` as the durable
-goal state across turns and context resets.
+goal state across turns and context resets. When configured, treat
+`.cairndev/loop.md` as the durable trajectory record for verified loop
+decisions.
 
 ## Required Discovery
 
@@ -144,12 +157,13 @@ Before editing non-trivial code:
 1. Read `AGENTS.md`.
 2. Read `.cairndev/contract.yaml` if present.
 3. Read `.cairndev/goal.yaml` when agentic iteration is enabled.
-4. Inspect the local code paths that the task may touch.
-5. Identify affected modules, public APIs, data boundaries, I/O boundaries,
+4. Read the configured loop trajectory file when present.
+5. Inspect the local code paths that the task may touch.
+6. Identify affected modules, public APIs, data boundaries, I/O boundaries,
    runtime dependencies, and expected test surface.
-6. Identify new or changed names at public and data boundaries that must remain
+7. Identify new or changed names at public and data boundaries that must remain
    self-explanatory.
-7. If the task changes architecture, extension points, or cross-module
+8. If the task changes architecture, extension points, or cross-module
    ownership, inspect existing ADRs before deciding.
 
 ## Implementation Plan
@@ -222,8 +236,9 @@ After editing:
 3. If the `cairndev` executable is not installed, use the documented local
    module entry point when this repository provides one.
 4. Fix failures or report a concrete reason they remain.
-5. For multi-round work, update `.cairndev/goal.yaml` after verification so the
-   next iteration can recover the objective, current iteration, and pause state.
+5. For multi-round work, update `.cairndev/goal.yaml` and the configured loop
+   trajectory after verification so the next iteration can recover the
+   objective, current iteration, pause state, and latest verified decision.
 
 ## Final Report
 
@@ -239,7 +254,6 @@ Summarize:
 - ADR changes or why none were needed;
 - remaining risks.
 """
-
 DEFAULT_REVIEW_SKILL = """---
 name: dev-quality-review
 description: >
@@ -261,11 +275,12 @@ test expectations.
 1. Read `AGENTS.md`.
 2. Read `.cairndev/contract.yaml` if present.
 3. Read `.cairndev/goal.yaml` when agentic iteration is enabled.
-4. Inspect the changed files and relevant surrounding code.
-5. Identify public API changes, new dependencies, new abstractions, data
+4. Read the configured loop trajectory file when present.
+5. Inspect the changed files and relevant surrounding code.
+6. Identify public API changes, new dependencies, new abstractions, data
    boundary changes, I/O boundary changes, naming clarity for nontrivial
    variables, language standard expectations, and test coverage.
-6. Run the declared test command and `cairndev check .` when available, unless
+7. Run the declared test command and `cairndev check .` when available, unless
    the user only asked for a static review.
 
 ## Blocking Criteria
@@ -287,6 +302,8 @@ Request changes when any of these are true:
 - verification failed and the failure is relevant to the change.
 - agentic iteration is enabled and the goal state is missing, stale,
   unverified, or beyond its human-review interval.
+- loop engineering is configured and the trajectory, checkpoints, or required
+  repo-local skills are missing.
 
 ## Review Rubric
 
@@ -330,7 +347,6 @@ Design summary:
 If there are no blocking findings, say so clearly and still mention residual
 test or design risk.
 """
-
 DEFAULT_ADR = """# ADR 0001: Architecture Contract as a First-Class Development Artifact
 
 Status: accepted
@@ -366,6 +382,7 @@ def init_project(target: Path, force: bool = False) -> list[Path]:
             DEFAULT_CONTRACT_TEMPLATE.format(project_name=target.name),
         ),
         (target / ".cairndev" / "goal.yaml", DEFAULT_GOAL_TEMPLATE),
+        (target / ".cairndev" / "loop.md", DEFAULT_LOOP_LOG),
         (target / ".cairndev" / "adr" / "0001-architecture-contract.md", DEFAULT_ADR),
         (target / ".agents" / "skills" / "dev-quality-control" / "SKILL.md", DEFAULT_SKILL),
         (target / ".agents" / "skills" / "dev-quality-review" / "SKILL.md", DEFAULT_REVIEW_SKILL),

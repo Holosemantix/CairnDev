@@ -1,8 +1,8 @@
 schema_version: "0.1"
 objective: "Keep CairnDev a lightweight, executable design-contract layer for agentic software development."
 status: active
-current_iteration: 1
-last_verified_iteration: 1
+current_iteration: 2
+last_verified_iteration: 2
 last_human_review_iteration: 1
 
 success_criteria:
@@ -19,3 +19,12 @@ verification:
     - "python3 -m compileall -q src tests"
     - "python3 -m pytest -q"
     - "PYTHONPATH=src python3 -m cairndev.cli check ."
+
+loop_engineering:
+  trajectory_file: ".cairndev/loop.md"
+  checkpoint_files:
+    - ".cairndev/goal.yaml"
+    - ".cairndev/contract.yaml"
+  required_skills:
+    - "dev-quality-control"
+    - "dev-quality-review"

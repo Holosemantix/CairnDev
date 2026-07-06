@@ -7,7 +7,13 @@ from typing import Any
 
 import yaml
 
-from .models import AgenticIterationPolicy, DesignContract, GoalState, QualityBudget
+from .models import (
+    AgenticIterationPolicy,
+    DesignContract,
+    GoalState,
+    LoopEngineeringState,
+    QualityBudget,
+)
 
 
 def load_contract(root: Path) -> DesignContract:
@@ -51,6 +57,8 @@ def load_goal_state(root: Path, goal_file: str = ".cairndev/goal.yaml") -> GoalS
         ),
         success_criteria=[str(item) for item in _sequence(data.get("success_criteria", []))],
         pause_triggers=[str(item) for item in _sequence(data.get("pause_triggers", []))],
+        verification_required_commands=_verification_commands(data),
+        loop_engineering=_loop_engineering_state(data),
     )
 
 
@@ -87,6 +95,31 @@ def _load_agentic_iteration_policy(data: Mapping[str, Any]) -> AgenticIterationP
             data.get("min_pause_triggers"), defaults.min_pause_triggers
         ),
     )
+
+
+def _verification_commands(data: Mapping[str, Any]) -> list[str]:
+    verification = _mapping(data.get("verification", {}))
+    return [
+        command
+        for item in _sequence(verification.get("required_commands", []))
+        if (command := str(item).strip())
+    ]
+
+
+def _loop_engineering_state(data: Mapping[str, Any]) -> LoopEngineeringState:
+    loop_engineering = _mapping(data.get("loop_engineering", {}))
+    trajectory_file = loop_engineering.get("trajectory_file")
+    return LoopEngineeringState(
+        trajectory_file=str(trajectory_file).strip()
+        if isinstance(trajectory_file, str) and trajectory_file.strip()
+        else None,
+        checkpoint_files=_string_list(loop_engineering.get("checkpoint_files", [])),
+        required_skills=_string_list(loop_engineering.get("required_skills", [])),
+    )
+
+
+def _string_list(value: Any) -> list[str]:
+    return [text for item in _sequence(value) if (text := str(item).strip())]
 
 
 def _coerce_budget_value(value: Any, default: Any) -> Any:

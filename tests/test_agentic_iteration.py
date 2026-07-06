@@ -42,6 +42,44 @@ def test_agentic_iteration_requires_human_review_within_budget(tmp_path: Path) -
     assert "goal_human_review_due" in codes
 
 
+def test_agentic_iteration_checks_declared_loop_files(tmp_path: Path) -> None:
+    _write_agentic_project(tmp_path)
+    _write_goal_state(
+        tmp_path,
+        current_iteration=2,
+        last_verified_iteration=2,
+        last_human_review_iteration=2,
+        loop_engineering="""loop_engineering:
+  trajectory_file: ".cairndev/missing-loop.md"
+  checkpoint_files:
+    - ".cairndev/missing-checkpoint.yaml"
+""",
+    )
+
+    codes = _finding_codes(tmp_path)
+
+    assert "missing_loop_trajectory" in codes
+    assert "missing_loop_checkpoint" in codes
+
+
+def test_agentic_iteration_checks_declared_loop_skills(tmp_path: Path) -> None:
+    _write_agentic_project(tmp_path)
+    _write_goal_state(
+        tmp_path,
+        current_iteration=2,
+        last_verified_iteration=2,
+        last_human_review_iteration=2,
+        loop_engineering="""loop_engineering:
+  required_skills:
+    - "missing-loop-skill"
+""",
+    )
+
+    codes = _finding_codes(tmp_path)
+
+    assert "missing_loop_skill" in codes
+
+
 def test_init_project_agentic_iteration_state_passes_checks(tmp_path: Path) -> None:
     init_project(tmp_path)
     (tmp_path / "tests").mkdir()
@@ -89,6 +127,7 @@ def _write_goal_state(
     current_iteration: int,
     last_verified_iteration: int,
     last_human_review_iteration: int,
+    loop_engineering: str = "",
 ) -> None:
     tmp_path.joinpath(".cairndev", "goal.yaml").write_text(
         f"""schema_version: "0.1"
@@ -101,6 +140,10 @@ success_criteria:
   - "End-to-end path works."
 pause_triggers:
   - "Scope changes."
+verification:
+  required_commands:
+    - "pytest -q"
+{loop_engineering}
 """,
         encoding="utf-8",
     )

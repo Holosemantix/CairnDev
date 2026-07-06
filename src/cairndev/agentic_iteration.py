@@ -48,7 +48,7 @@ def check_agentic_iteration_state(
     goal_state = load_goal_state(root, goal_rel)
     if goal_state is None:
         return []
-    return _check_goal_state(goal_state, policy, goal_rel)
+    return _check_goal_state(root, goal_state, policy, goal_rel)
 
 
 def _check_goal_file_path(goal_file: Path, raw_goal_file: str) -> list[Finding]:
@@ -66,6 +66,7 @@ def _check_goal_file_path(goal_file: Path, raw_goal_file: str) -> list[Finding]:
 
 
 def _check_goal_state(
+    root: Path,
     goal_state: GoalState,
     policy: AgenticIterationPolicy,
     goal_rel: str,
@@ -75,6 +76,8 @@ def _check_goal_state(
     _extend_if_invalid_goal_status(findings, goal_state, goal_rel)
     _extend_if_missing_goal_lists(findings, goal_state, policy, goal_rel)
     _extend_if_invalid_goal_iterations(findings, goal_state, policy, goal_rel)
+    _extend_if_missing_verification_commands(findings, goal_state, policy, goal_rel)
+    _extend_loop_engineering_findings(findings, root, goal_state, goal_rel)
     return findings
 
 
@@ -223,3 +226,97 @@ def _extend_if_goal_needs_human_review(
             suggestion="Pause for human review or update last_human_review_iteration.",
         )
     )
+
+
+def _extend_if_missing_verification_commands(
+    findings: list[Finding],
+    goal_state: GoalState,
+    policy: AgenticIterationPolicy,
+    goal_rel: str,
+) -> None:
+    if not policy.require_verification_each_iteration:
+        return
+    if goal_state.verification_required_commands:
+        return
+    findings.append(
+        Finding(
+            code="missing_goal_verification_commands",
+            severity="warning",
+            message="Goal state does not list required verification commands.",
+            path=goal_rel,
+            suggestion="Add verification.required_commands to the goal state.",
+        )
+    )
+
+
+def _extend_loop_engineering_findings(
+    findings: list[Finding],
+    root: Path,
+    goal_state: GoalState,
+    goal_rel: str,
+) -> None:
+    loop_state = goal_state.loop_engineering
+    if loop_state.trajectory_file is not None:
+        _extend_missing_repo_file(
+            findings,
+            root,
+            loop_state.trajectory_file,
+            goal_rel,
+            "missing_loop_trajectory",
+            "Configured loop trajectory file is missing.",
+        )
+    for checkpoint_file in loop_state.checkpoint_files:
+        _extend_missing_repo_file(
+            findings,
+            root,
+            checkpoint_file,
+            goal_rel,
+            "missing_loop_checkpoint",
+            "Configured loop checkpoint file is missing.",
+        )
+    for skill_name in loop_state.required_skills:
+        _extend_missing_loop_skill(findings, root, skill_name, goal_rel)
+
+
+def _extend_missing_repo_file(
+    findings: list[Finding],
+    root: Path,
+    repo_file: str,
+    goal_rel: str,
+    code: str,
+    message: str,
+) -> None:
+    path = Path(repo_file)
+    if _invalid_repo_path(path) or not (root / path).is_file():
+        findings.append(
+            Finding(
+                code=code,
+                severity="error",
+                message=message,
+                path=goal_rel,
+                suggestion=f"Create {repo_file!r} or remove it from loop_engineering.",
+            )
+        )
+
+
+def _extend_missing_loop_skill(
+    findings: list[Finding],
+    root: Path,
+    skill_name: str,
+    goal_rel: str,
+) -> None:
+    skill_path = Path(".agents") / "skills" / skill_name / "SKILL.md"
+    if _invalid_repo_path(skill_path) or not (root / skill_path).is_file():
+        findings.append(
+            Finding(
+                code="missing_loop_skill",
+                severity="error",
+                message=f"Configured loop engineering skill is missing: {skill_name}.",
+                path=goal_rel,
+                suggestion=f"Create {skill_path.as_posix()} or remove it from the goal.",
+            )
+        )
+
+
+def _invalid_repo_path(path: Path) -> bool:
+    return path.is_absolute() or ".." in path.parts or not path.name
